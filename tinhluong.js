@@ -1,20 +1,20 @@
-// File: tinhluong.js
-
 document.addEventListener("DOMContentLoaded", function () {
+  // Giá trị mặc định cho một số phụ cấp
   const defaultValues = {
     pcDiLai: 500000,
     pcChuyenCan: 200000,
     pcThamNien: 400000
   };
 
-  // Set default values
+  // Khởi tạo giá trị mặc định
   document.getElementById("pcDiLai").value = defaultValues.pcDiLai;
   document.getElementById("pcChuyenCan").value = defaultValues.pcChuyenCan;
   document.getElementById("pcThamNien").value = defaultValues.pcThamNien;
 
-  // Focus chuyển tiếp khi nhấn Enter
+  // Tạo mảng tất cả input và select để xử lý focus Enter và cập nhật
   const inputs = Array.from(document.querySelectorAll("input, select"));
   inputs.forEach((input, index) => {
+    // Chuyển focus khi nhấn Enter
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
@@ -22,22 +22,24 @@ document.addEventListener("DOMContentLoaded", function () {
         if (next) next.focus();
       }
     });
+    // Tính lương ngay khi thay đổi
+    input.addEventListener("input", tinhLuong);
   });
 
-  // Cập nhật khi có thay đổi
-  inputs.forEach(input => input.addEventListener("input", tinhLuong));
-
   function tinhLuong() {
+    // Lấy dữ liệu đầu vào
     const luongCoBan = +document.getElementById("luongCoBan").value || 0;
     const ngayCongChuan = +document.getElementById("ngayCongChuan").value || 1;
     const phuCapThamNien = +document.getElementById("pcThamNien").value || 0;
     const phuCapChucVu = +document.getElementById("pcChucVu").value || 0;
     const hoTroDiLai = +document.getElementById("pcDiLai").value || 0;
 
+    // Lương cơ bản phân theo ngày và giờ
     const luongNgayCong = luongCoBan / ngayCongChuan;
     const luongTangCa = (luongCoBan + phuCapThamNien + phuCapChucVu + hoTroDiLai) / ngayCongChuan / 8;
-    const troCapDem = (luongCoBan + phuCapThamNien + phuCapChucVu + hoTroDiLai) / ngayCongChuan / 8;
+    const troCapDem = luongTangCa;
 
+    // Hàm tính và cập nhật tiền từng loại
     function updateTien(idSo, idTien, calc) {
       const val = +document.getElementById(idSo).value || 0;
       const tien = Math.round(calc(val));
@@ -45,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return tien;
     }
 
+    // Tính lần lượt các khoản 100%, 150%, 200%, đêm, chủ nhật...
     let tong = 0;
     tong += updateTien("ngayCong", "tienNgayCong", so => luongNgayCong * so);
     tong += updateTien("tc150", "tienTC150", so => luongTangCa * 1.5 * so);
@@ -57,50 +60,59 @@ document.addEventListener("DOMContentLoaded", function () {
     tong += updateTien("phepNam", "tienPhepNam", so => luongNgayCong * so);
     tong += updateTien("le", "tienLe", so => luongNgayCong * so);
 
-    const tienNgayLeTet = Math.round(calcBangPhu(luongNgayCong, luongTangCa, troCapDem));
+    // Tính tổng từ bảng phụ (giờ công hành chính, tăng ca, đêm)
+    const tienNgayLeTet = calcBangPhu(luongNgayCong, luongTangCa, troCapDem);
     document.getElementById("tienNgayLeTet").textContent = tienNgayLeTet.toLocaleString("vi-VN");
     tong += tienNgayLeTet;
 
+    // Cộng thêm các phụ cấp khác
     const phuCaps = [
       "pcABC", "pcChuyenCan", "pcThamNien",
       "pcChucVu", "pcDiLai", "pcDienThoai",
       "pcTreEm", "pcKhac"
     ];
     phuCaps.forEach(id => {
-      const val = +document.getElementById(id).value || 0;
-      tong += val;
+      tong += +document.getElementById(id).value || 0;
     });
 
-    const tongLuong = Math.round(tong);
-    document.getElementById("tongLuong").textContent = tongLuong.toLocaleString("vi-VN");
+    // Cập nhật tổng thu nhập
+    document.getElementById("tongLuong").textContent = Math.round(tong).toLocaleString("vi-VN");
 
-    // Khấu trừ BHXH và Công đoàn
+    // Khấu trừ BHXH (10.5%) và Công đoàn (1%) tính trên lương đóng BH
     const luongDongBH = luongCoBan + phuCapThamNien + phuCapChucVu;
     const tienTruBHXH = Math.round(luongDongBH * 0.105);
     const tienTruCD = Math.round(luongDongBH * 0.01);
     document.getElementById("tienTruBHXH").textContent = tienTruBHXH.toLocaleString("vi-VN");
     document.getElementById("tienTruCD").textContent = tienTruCD.toLocaleString("vi-VN");
 
-    const thucLinh = tongLuong - tienTruBHXH - tienTruCD;
+    // Tính thực lĩnh
+    const thucLinh = Math.round(tong) - tienTruBHXH - tienTruCD;
     document.getElementById("thucLinh").textContent = thucLinh.toLocaleString("vi-VN");
   }
 
+  // Hàm tính tổng của Bảng Phụ (giờ công hành chính, tăng ca, đêm)
   function calcBangPhu(luongNgayCong, luongTangCa, troCapDem) {
-    function phuLuong(soGioId, tyLeId, heSoLuong, rowId) {
+    function phuLuong(soGioId, heSoId, rowTienId, loaiLuong) {
       const gio = +document.getElementById(soGioId).value || 0;
-      const tyLe = (+document.getElementById(tyLeId).value || 0) / 100;
-      const tien = Math.round(heSoLuong * gio * tyLe);
-      document.getElementById(rowId).textContent = tien.toLocaleString("vi-VN");
+      const heSo = +document.getElementById(heSoId).value || 0;
+      let donGia = 0;
+      if (loaiLuong === "hanhChinh" || loaiLuong === "dem") {
+        donGia = luongNgayCong / 800;
+      } else if (loaiLuong === "tangCa") {
+        donGia = luongTangCa / 100;
+      }
+      const tien = Math.round(gio * heSo * donGia);
+      document.getElementById(rowTienId).textContent = tien.toLocaleString("vi-VN");
       return tien;
     }
 
-    let tong = 0;
-    tong += phuLuong("soGioHanhChinh1", "phuLuongHanhChinh", luongNgayCong / 8, "tienHanhChinh");
-    tong += phuLuong("soGioTangCa1", "phuLuongTangCa", luongTangCa, "tienTangCa");
-    tong += phuLuong("soGioDem1", "phuLuongDem", luongNgayCong / 8, "tienTroCapDem");
-    tong += phuLuong("soGioHanhChinh2", "phuLuongHanhChinh2", luongNgayCong / 8, "tienHanhChinh2");
-    tong += phuLuong("soGioTangCa2", "phuLuongTangCa2", luongTangCa, "tienTangCa2");
-    tong += phuLuong("soGioDem2", "phuLuongDem2", luongNgayCong / 8, "tienTroCapDem2");
-    return tong;
+    let tongPhu = 0;
+    tongPhu += phuLuong("soGioHanhChinh1", "phuLuongHanhChinh", "tienHanhChinh", "hanhChinh");
+    tongPhu += phuLuong("soGioTangCa1", "phuLuongTangCa", "tienTangCa", "tangCa");
+    tongPhu += phuLuong("soGioDem1", "phuLuongDem", "tienTroCapDem", "dem");
+    tongPhu += phuLuong("soGioHanhChinh2", "phuLuongHanhChinh2", "tienHanhChinh2", "hanhChinh");
+    tongPhu += phuLuong("soGioTangCa2", "phuLuongTangCa2", "tienTangCa2", "tangCa");
+    tongPhu += phuLuong("soGioDem2", "phuLuongDem2", "tienTroCapDem2", "dem");
+    return tongPhu;
   }
 });
