@@ -43,6 +43,61 @@
       border: 1px solid #ccc;
       border-radius: 3px;
     }
+/* ==== CHỈNH KÍCH THƯỚC CỘT BẢNG CHÍNH ==== */
+#luongContainer table > thead > tr > th:nth-child(1),
+#luongContainer table > tbody > tr > td:nth-child(1) {
+  width: 43%;
+  text-align: left;
+  padding-left: 15px;
+}
+
+#luongContainer table > thead > tr > th:nth-child(2),
+#luongContainer table > tbody > tr > td:nth-child(2) {
+  width: 26%;
+}
+
+#luongContainer table > thead > tr > th:nth-child(3),
+#luongContainer table > tbody > tr > td:nth-child(3) {
+  width: 31%;
+  text-align: right;
+  padding-right: 15px;
+}
+/* ==== CHỈNH KÍCH THƯỚC CỘT BẢNG PHỤ ==== */
+#bangPhu table td:nth-child(1),
+#bangPhu table th:nth-child(1) {
+  width: 6%;
+}
+#bangPhu table td:nth-child(2),
+#bangPhu table th:nth-child(2) {
+  width: 33%;
+  padding-left: 8px;
+}
+#bangPhu table td:nth-child(3),
+#bangPhu table th:nth-child(3) {
+  width: 20%;
+}
+#bangPhu table td:nth-child(4),
+#bangPhu table th:nth-child(4) {
+  width: 20%;
+}
+#bangPhu table td:nth-child(5),
+#bangPhu table th:nth-child(5) {
+  width: 21%;
+  padding-right: 8px;
+}
+table th,
+table td {
+  height: 20px; /* Bạn có thể thay đổi thành 30px, 40px, tùy ý */
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+input[type="number"],
+select {
+  padding: 4px 6px;    /* Giảm padding để ô thấp hơn */
+  font-size: 13px;     /* Giảm cỡ chữ nếu cần */
+  height: 28px;        /* Có thể thêm dòng này để kiểm soát chiều cao */
+}
+
     /* Nếu muốn căn giữa text trong input, đổi text-align thành center */
     /*
     table input[type="number"],
@@ -174,8 +229,8 @@
       <thead>
         <tr>
           <th>Khoản mục</th>
-          <th>Số giờ/Số ngày</th>
-          <th>Thành tiền (VND)</th>
+          <th>Thời gian</th>
+          <th>Thành tiền</th>
         </tr>
       </thead>
       <tbody id="luongTable">
@@ -183,10 +238,10 @@
         <tr><td>Tăng ca 150%</td><td><input type="number" id="tc150" placeholder="Số giờ" /></td><td id="tienTC150">0</td></tr>
         <tr><td>Tăng ca 200%</td><td><input type="number" id="tc200" placeholder="Số giờ" /></td><td id="tienTC200">0</td></tr>
         <tr><td>Trợ cấp đêm 30%</td><td><input type="number" id="tcDem30" placeholder="Số giờ" /></td><td id="tienDem30">0</td></tr>
-        <tr style="color:red;"><td>Ngày công chủ nhật 200%</td><td><input type="number" id="ngayCong200" placeholder="Số ngày" /></td><td id="tienCong200">0</td></tr>
-        <tr style="color:red;"><td>Tăng ca ngày chủ nhật 300%</td><td><input type="number" id="tc300" placeholder="Số giờ" /></td><td id="tienTC300">0</td></tr>
-        <tr style="color:red;"><td>Tăng ca đêm chủ nhật 340%</td><td><input type="number" id="tc340" placeholder="Số giờ" /></td><td id="tienTC340">0</td></tr>
-        <tr style="color:red;"><td>Trợ cấp đêm chủ nhật 70%</td><td><input type="number" id="tcDem70" placeholder="Số giờ" /></td><td id="tienDem70">0</td></tr>
+        <tr style="color:red;"><td>Ngày công 200%</td><td><input type="number" id="ngayCong200" placeholder="Số ngày" /></td><td id="tienCong200">0</td></tr>
+        <tr style="color:red;"><td>Tăng ca 300%</td><td><input type="number" id="tc300" placeholder="Số giờ" /></td><td id="tienTC300">0</td></tr>
+        <tr style="color:red;"><td>Tăng ca 340%</td><td><input type="number" id="tc340" placeholder="Số giờ" /></td><td id="tienTC340">0</td></tr>
+        <tr style="color:red;"><td>Trợ cấp đêm 70%</td><td><input type="number" id="tcDem70" placeholder="Số giờ" /></td><td id="tienDem70">0</td></tr>
         <tr><td>Ngày phép năm</td><td><input type="number" id="phepNam" placeholder="Số ngày" /></td><td id="tienPhepNam">0</td></tr>
         <tr><td>Ngày lễ</td><td><input type="number" id="le" placeholder="Số ngày" /></td><td id="tienLe">0</td></tr>
         <tr><td colspan="2">Phụ cấp ABC</td><td><input type="number" id="pcABC" /></td></tr>
@@ -244,10 +299,10 @@
     <table>
       <thead>
         <tr>
-          <th rowspan="2">Số ngày/Số giờ</th>
-          <th rowspan="2">Loại giờ</th>
+          <th rowspan="2">Ngày</th>
+          <th rowspan="2">Khoản mục</th>
           <th rowspan="2">Số giờ</th>
-          <th rowspan="2">Phụ lương</th>
+          <th rowspan="2">% lương</th>
           <th rowspan="2">Thành tiền</th>
         </tr>
       </thead>
@@ -255,38 +310,38 @@
         <tr>
           <td rowspan="3"><input type="number" /></td>
           <td>Giờ hành chính</td>
-          <td><input type="number" id="soGioHanhChinh1" placeholder="Số giờ" /></td>
+          <td><input type="number" id="soGioHanhChinh1" placeholder="giờ" /></td>
           <td><input type="number" id="phuLuongHanhChinh" /></td>
           <td id="tienHanhChinh">0</td>
         </tr>
         <tr>
           <td>Tăng ca, thông ca</td>
-          <td><input type="number" id="soGioTangCa1" placeholder="Số giờ" /></td>
+          <td><input type="number" id="soGioTangCa1" placeholder="giờ" /></td>
           <td><input type="number" id="phuLuongTangCa" /></td>
           <td id="tienTangCa">0</td>
         </tr>
         <tr>
           <td>Trợ cấp đêm</td>
-          <td><input type="number" id="soGioDem1" placeholder="Số giờ" /></td>
+          <td><input type="number" id="soGioDem1" placeholder="giờ" /></td>
           <td><input type="number" id="phuLuongDem" /></td>
           <td id="tienTroCapDem">0</td>
         </tr>
         <tr>
           <td rowspan="3"><input type="number" /></td>
           <td>Giờ hành chính</td>
-          <td><input type="number" id="soGioHanhChinh2" placeholder="Số giờ" /></td>
+          <td><input type="number" id="soGioHanhChinh2" placeholder="giờ" /></td>
           <td><input type="number" id="phuLuongHanhChinh2" /></td>
           <td id="tienHanhChinh2">0</td>
         </tr>
         <tr>
           <td>Tăng ca, thông ca</td>
-          <td><input type="number" id="soGioTangCa2" placeholder="Số giờ" /></td>
+          <td><input type="number" id="soGioTangCa2" placeholder="giờ" /></td>
           <td><input type="number" id="phuLuongTangCa2" /></td>
           <td id="tienTangCa2">0</td>
         </tr>
         <tr>
           <td>Trợ cấp đêm</td>
-          <td><input type="number" id="soGioDem2" placeholder="Số giờ" /></td>
+          <td><input type="number" id="soGioDem2" placeholder="giờ" /></td>
           <td><input type="number" id="phuLuongDem2" /></td>
           <td id="tienTroCapDem2">0</td>
         </tr>
