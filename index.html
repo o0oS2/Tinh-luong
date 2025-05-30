@@ -10,45 +10,37 @@
       background: #f4f4f4;
       padding: 30px;
     }
-
     h1 {
       text-align: center;
       color: #007bff;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
       background: #fff;
     }
-
     th, td {
       padding: 10px;
       border: 1px solid #ddd;
       text-align: center;
     }
-
     th {
       background: #007bff;
       color: white;
     }
-
     input[type="number"], input[type="text"], select {
       width: 100px;
       text-align: right;
     }
-
     tfoot td {
       font-weight: bold;
       background: #e9f7ef;
     }
-
     .center {
       text-align: center;
       margin-top: 20px;
     }
-
     button {
       padding: 10px 20px;
       background: #28a745;
@@ -58,20 +50,15 @@
       cursor: pointer;
       margin: 5px;
     }
-
     button:hover {
       background: #218838;
     }
-
-    /* Bảng phụ */
     #bangPhu {
       margin-top: 40px;
     }
-
     #bangPhu th {
       background: #28a745;
     }
-
     #bangPhu td, #bangPhu th {
       padding: 8px;
       border: 1px solid #ddd;
@@ -83,33 +70,25 @@
       body {
         padding: 10px;
       }
-
       table {
         font-size: 14px;
       }
-
-      input[type="number"],
-      input[type="text"],
-      select {
+      input[type="number"], input[type="text"], select {
         width: 100%;
         font-size: 16px;
       }
-
       label, select {
         display: block;
         margin-top: 10px;
         margin-bottom: 5px;
       }
-
       button {
         width: 100%;
         font-size: 16px;
       }
-
       th, td {
         padding: 6px;
       }
-
       h1 {
         font-size: 22px;
       }
@@ -125,7 +104,6 @@
   <label for="ngayCongChuan" style="font-size: 22px; color: purple; margin-left: 20px;">
     Ngày công chuẩn (số ngày trong tháng - số ngày chủ nhật):
   </label>
-
   <select id="ngayCongChuan" name="ngayCongChuan" style="font-size: 18px; margin-left: 10px;">
     <option value="24">24</option>
     <option value="25">25</option>
@@ -133,14 +111,117 @@
   </select>
 
   <div id="luongContainer">
-    <!-- (Phần bảng chính như cũ) -->
-    <!-- ... giữ nguyên nội dung bảng ... -->
+    <!-- BẢNG TÍNH LƯƠNG CHÍNH -->
+    <table>
+      <thead>
+        <tr>
+          <th>Khoản mục</th>
+          <th>Số giờ/Số ngày</th>
+          <th>Thành tiền (VND)</th>
+        </tr>
+      </thead>
+      <tbody id="luongTable">
+        <tr><td>Ngày công 100%</td><td><input type="number" id="ngayCong" /></td><td id="tienNgayCong">0</td></tr>
+        <tr><td>Tăng ca 150%</td><td><input type="number" id="tc150" /></td><td id="tienTC150">0</td></tr>
+        <tr><td>Tăng ca 200%</td><td><input type="number" id="tc200" /></td><td id="tienTC200">0</td></tr>
+        <tr><td>Trợ cấp đêm 30%</td><td><input type="number" id="tcDem30" /></td><td id="tienDem30">0</td></tr>
+        <tr style="color:red;"><td>Ngày công chủ nhật 200%</td><td><input type="number" id="ngayCong200" /></td><td id="tienCong200">0</td></tr>
+        <tr style="color:red;"><td>Tăng ca ngày chủ nhật 300%</td><td><input type="number" id="tc300" /></td><td id="tienTC300">0</td></tr>
+        <tr style="color:red;"><td>Tăng ca đêm chủ nhật 340%</td><td><input type="number" id="tc340" /></td><td id="tienTC340">0</td></tr>
+        <tr style="color:red;"><td>Trợ cấp đêm chủ nhật 70%</td><td><input type="number" id="tcDem70" /></td><td id="tienDem70">0</td></tr>
+        <tr><td>Ngày phép năm</td><td><input type="number" id="phepNam" /></td><td id="tienPhepNam">0</td></tr>
+        <tr><td>Ngày lễ</td><td><input type="number" id="le" /></td><td id="tienLe">0</td></tr>
+        <tr><td colspan="2">Phụ cấp ABC</td><td><input type="number" id="pcABC" /></td></tr>
+        <tr><td colspan="2">Phụ cấp Chuyên cần</td><td>
+          <select id="pcChuyenCan">
+            <option value="0">0</option>
+            <option value="200000">200000</option>
+          </select>
+        </td></tr>
+        <tr><td colspan="2">Phụ cấp thâm niên</td><td>
+          <select id="pcThamNien">
+            <option value="200000">200000</option>
+            <option value="300000">300000</option>
+            <option value="400000">400000</option>
+          </select>
+        </td></tr>
+        <tr><td colspan="2">Phụ cấp chức vụ</td><td>
+          <select id="pcChucVu">
+            <option value="0">0</option>
+            <option value="100000">100000</option>
+          </select>
+        </td></tr>
+        <tr><td colspan="2">Hỗ trợ đi lại</td><td><input type="number" id="pcDiLai" /></td></tr>
+        <tr><td colspan="2">Hỗ trợ điện thoại</td><td>
+          <select id="pcDienThoai">
+            <option value="0">0</option>
+            <option value="1500000">1500000</option>
+            <option value="2500000">2500000</option>
+            <option value="3000000">3000000</option>
+            <option value="4000000">4000000</option>
+            <option value="5000000">5000000</option>
+          </select>
+        </td></tr>
+        <tr><td colspan="2">Hỗ trợ trẻ em dưới 6 tuổi</td><td>
+          <select id="pcTreEm">
+            <option value="0">0</option>
+            <option value="50000">50000</option>
+            <option value="100000">100000</option>
+            <option value="150000">150000</option>
+            <option value="200000">200000</option>
+          </select>
+        </td></tr>
+        <tr><td colspan="2">Phụ cấp khác</td><td><input type="number" id="pcKhac" /></td></tr>
+        <tr><td colspan="2">Lương ngày lễ, tết</td><td id="tienNgayLeTet">0</td></tr>
+        <tr style="background-color: yellow;"><td colspan="2">Tổng thu nhập</td><td id="tongLuong">0</td></tr>
+        <tr style="color:red;"><td colspan="2">Khấu trừ Bảo hiểm xã hội (10.5%)</td><td id="tienTruBHXH">0</td></tr>
+        <tr style="color:red;"><td colspan="2">Khấu trừ Công đoàn (1%)</td><td id="tienTruCD">0</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td colspan="2">Thực lĩnh (chưa trừ thuế TNCN)</td><td id="tongLuong">0</td></tr>
+      </tfoot>
+    </table>
   </div>
 
-  <!-- Bảng phụ -->
+  <!-- BẢNG PHỤ -->
   <div id="bangPhu">
-    <!-- (Phần bảng phụ như cũ) -->
-    <!-- ... giữ nguyên nội dung bảng phụ ... -->
+    <h2>Bảng chi tiết tính lương phụ</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Ngày</th>
+          <th>Khoản mục</th>
+          <th>Số giờ</th>
+          <th>% Lương</th>
+          <th>Thành tiền (VND)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 3 dòng mẫu, mỗi dòng 3 loại giờ -->
+        <!-- Lặp 3 nhóm tương tự dòng đầu -->
+        <!-- Bạn có thể thêm/xoá dòng tại đây tùy ý -->
+        <tr>
+          <td rowspan="3"><input type="number" /></td>
+          <td>Giờ hành chính</td>
+          <td><input type="number" id="soGioHanhChinh1" /></td>
+          <td><input type="number" id="phuLuongHanhChinh" /></td>
+          <td id="tienHanhChinh">0</td>
+        </tr>
+        <tr>
+          <td>Tăng ca, thông ca</td>
+          <td><input type="number" id="soGioTangCa1" /></td>
+          <td><input type="number" id="phuLuongTangCa" /></td>
+          <td id="tienTangCa">0</td>
+        </tr>
+        <tr>
+          <td>Trợ cấp đêm</td>
+          <td><input type="number" id="soGioDem1" /></td>
+          <td><input type="number" id="phuLuongDem" /></td>
+          <td id="tienTroCapDem">0</td>
+        </tr>
+        <!-- ... thêm dòng khác tương tự nếu cần ... -->
+      </tbody>
+    </table>
   </div>
 
   <div class="center">
@@ -149,7 +230,6 @@
   </div>
 
   <h2>Soạn: Trần Đức Trung</h2>
-
   <script src="tinhluong.js"></script>
 </body>
 </html>
