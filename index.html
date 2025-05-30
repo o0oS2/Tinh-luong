@@ -24,15 +24,33 @@
       padding: 10px;
       border: 1px solid #ddd;
       text-align: center;
+      vertical-align: middle; /* Canh giữa theo chiều dọc */
     }
     th {
       background: #007bff;
       color: white;
     }
-    input[type="number"], input[type="text"], select {
-      width: 80px;
-      text-align: right;
+    /* CHỈNH INPUT/SELECT NẰM TRONG BẢNG */
+    table input[type="number"],
+    table input[type="text"],
+    table select {
+      width: 100%;               /* Chiếm hết chiều rộng ô */
+      box-sizing: border-box;   /* Padding không làm vượt quá ô */
+      padding: 6px 8px;
+      font-size: 14px;
+      text-align: right;        /* Căn phải với số */
+      margin: 0;
+      border: 1px solid #ccc;
+      border-radius: 3px;
     }
+    /* Nếu muốn căn giữa text trong input, đổi text-align thành center */
+    /*
+    table input[type="number"],
+    table input[type="text"],
+    table select {
+      text-align: center;
+    }
+    */
     tfoot td {
       font-weight: bold;
       background: #e9f7ef;
@@ -63,7 +81,9 @@
       padding: 8px;
       border: 1px solid #ddd;
       text-align: center;
+      vertical-align: middle;
     }
+    /* Responsive cho màn hình nhỏ */
     @media screen and (max-width: 768px) {
       body {
         padding: 10px;
@@ -71,9 +91,12 @@
       table {
         font-size: 14px;
       }
-      input[type="number"], input[type="text"], select {
-        width: 90%;
+      table input[type="number"],
+      table input[type="text"],
+      table select {
+        width: 100%;    /* Chiếm hết chiều rộng trên mobile */
         font-size: 16px;
+        padding: 10px 8px;
       }
       label, select {
         display: block;
@@ -175,7 +198,7 @@
         <tr style="color:red;"><td colspan="2">Khấu trừ Công đoàn (1%)</td><td id="tienTruCD">0</td></tr>
       </tbody>
       <tfoot>
-        <tr><td colspan="2">Thực lĩnh (chưa trừ thuế TNCN)</td><td id="tongLuong">0</td></tr>
+        <tr><td colspan="2">Thực lĩnh (chưa trừ thuế TNCN)</td><td id="thucLinh">0</td></tr>
       </tfoot>
     </table>
   </div>
