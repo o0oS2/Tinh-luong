@@ -30,7 +30,7 @@
       color: white;
     }
     input[type="number"], input[type="text"], select {
-      width: 100px;
+      width: 80px;
       text-align: right;
     }
     tfoot td {
@@ -64,8 +64,6 @@
       border: 1px solid #ddd;
       text-align: center;
     }
-
-    /* Responsive cho điện thoại */
     @media screen and (max-width: 768px) {
       body {
         padding: 10px;
@@ -74,7 +72,7 @@
         font-size: 14px;
       }
       input[type="number"], input[type="text"], select {
-        width: 100%;
+        width: 90%;
         font-size: 16px;
       }
       label, select {
@@ -111,7 +109,6 @@
   </select>
 
   <div id="luongContainer">
-    <!-- BẢNG TÍNH LƯƠNG CHÍNH -->
     <table>
       <thead>
         <tr>
@@ -183,7 +180,6 @@
     </table>
   </div>
 
-  <!-- BẢNG PHỤ -->
   <div id="bangPhu">
     <h2>Bảng chi tiết tính lương phụ</h2>
     <table>
@@ -197,9 +193,6 @@
         </tr>
       </thead>
       <tbody>
-        <!-- 3 dòng mẫu, mỗi dòng 3 loại giờ -->
-        <!-- Lặp 3 nhóm tương tự dòng đầu -->
-        <!-- Bạn có thể thêm/xoá dòng tại đây tùy ý -->
         <tr>
           <td rowspan="3"><input type="number" /></td>
           <td>Giờ hành chính</td>
@@ -219,7 +212,6 @@
           <td><input type="number" id="phuLuongDem" /></td>
           <td id="tienTroCapDem">0</td>
         </tr>
-        <!-- ... thêm dòng khác tương tự nếu cần ... -->
       </tbody>
     </table>
   </div>
