@@ -1,0 +1,700 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script>```html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tính Lương - Đức Trung</title>
+  <link rel="icon" href="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Icon.png" type="image/png">
+  <style>
+    :root {
+      --primary-color: #007bff;
+      --secondary-color: #28a745;
+      --highlight-bg: #e9f7ef;
+      --error-color: red;
+      --table-border: 1px solid #ddd;
+      --input-height: 24px;
+      --font-size-sm: 12px;
+      --font-size-md: 13px;
+      --padding-sm: 2px 6px;
+      --bang-phu-col-width: 15%;
+      --bang-phu-col-min-width: 60px;
+      --bang-phu-col-max-width: 80px;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+      margin: 0;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary-color);
+      margin: 0 0 10px;
+    }
+
+    h3 {
+      text-align: center;
+      color: var(--error-color);
+      margin: 8px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      margin: 10px 0;
+    }
+
+    th, td {
+      border: var(--table-border);
+      padding: 4px 6px;
+      text-align: center;
+      vertical-align: middle;
+      height: 24px;
+    }
+
+    th {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    #bangPhu th {
+      background: var(--secondary-color);
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: var(--padding-sm);
+      font-size: var(--font-size-sm);
+      text-align: right;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      height: var(--input-height);
+    }
+
+    #luongContainer th:nth-child(1),
+    #luongContainer td:nth-child(1) {
+      width: 43%;
+      text-align: left;
+      padding-left: 15px;
+    }
+
+    #luongContainer th:nth-child(2),
+    #luongContainer td:nth-child(2) { width: 23%; }
+
+    #luongContainer th:nth-child(3),
+    #luongContainer td:nth-child(3) {
+      width: 34%;
+      text-align: right;
+      padding-right: 15px;
+    }
+
+    #bangPhu td:nth-child(1),
+    #bangPhu th:nth-child(1) { width: 5%; }
+
+    #bangPhu td:nth-child(2),
+    #bangPhu th:nth-child(2) { width: 50%; }
+
+    #bangPhu td:nth-child(3),
+    #bangPhu th:nth-child(3),
+    #bangPhu td:nth-child(4),
+    #bangPhu th:nth-child(4) {
+      width: var(--bang-phu-col-width);
+      min-width: var(--bang-phu-col-min-width);
+      max-width: var(--bang-phu-col-max-width);
+      padding: 4px;
+    }
+
+    #bangPhu td:nth-child(5),
+    #bangPhu th:nth-child(5) { width: 30%; }
+
+    #bangPhu input[type="number"] {
+      width: 100%;
+      padding: 2px 4px;
+      font-size: var(--font-size-sm);
+      height: var(--input-height);
+    }
+
+    tfoot td,
+    #luongContainer tr:last-child td {
+      font-weight: bold;
+      background: var(--highlight-bg);
+    }
+
+    tr[style*="background-color: yellow"] td { background: #ff0; }
+    tr[style*="color: red"] td { color: var(--error-color); }
+    #luongContainer tr:last-child[style*="background-color"] td {
+      background: #cce5ff;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .input-row label {
+      font-size: 18px;
+      color: var(--secondary-color);
+      white-space: nowrap;
+    }
+
+    .input-row input[type="number"],
+    .input-row select {
+      width: 120px;
+      font-size: 16px;
+      height: 30px;
+      padding: 4px 6px;
+    }
+
+    .input-row select#ngayCongChuan {
+      width: 60px;
+      text-align: center;
+    }
+
+    button {
+      padding: 8px 16px;
+      background: var(--secondary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    button:hover { background: #218838; }
+
+    .contact-box, .rules-box, .ad-block-box {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 8px;
+      margin: 10px 0;
+    }
+
+    .contact-box p, .rules-box ul, .ad-block-box ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .contact-box a {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      margin-right: 10px;
+    }
+
+    .contact-box img { margin-right: 4px; }
+
+    .bank-details p {
+      margin: 2px 0;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .bank-details button {
+      font-size: 14px;
+      padding: 0 8px;
+      height: 20px;
+      vertical-align: middle;
+    }
+
+    .rules-box h4 { margin: 4px 0; font-size: 14px; }
+
+    .rules-box ul { margin-left: 16px; }
+
+    .rules-box li { margin-bottom: 6px; }
+
+    @media screen and (max-width: 768px) {
+      body { padding: 10px; }
+      table { font-size: 14px; }
+      th, td { padding: 4px; }
+      input[type="number"], select {
+        font-size: 14px;
+        padding: 6px;
+      }
+      .input-row input[type="number"], .input-row select { width: 100px; }
+      .input-row label { font-size: 16px; }
+      button { width: 100%; }
+      h1 { font-size: 20px; }
+      #bangPhu td:nth-child(3),
+      #bangPhu th:nth-child(3),
+      #bangPhu td:nth-child(4),
+      #bangPhu th:nth-child(4) {
+        min-width: 50px;
+        max-width: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>BẢNG TÍNH LƯƠNG</h1>
+
+  <div class="input-row">
+    <label for="luongCoBan">Lương cơ bản:</label>
+    <input type="number" id="luongCoBan" aria-label="Lương cơ bản">
+    <label for="ngayCongChuan">Ngày công chuẩn:</label>
+    <select id="ngayCongChuan" aria-label="Ngày công chuẩn">
+      <option value="24">24</option>
+      <option value="25">25</option>
+      <option value="26" selected>26</option>
+    </select>
+  </div>
+
+  <div id="luongContainer">
+    <table>
+      <thead>
+        <tr>
+          <th>Khoản mục</th>
+          <th>Thời gian</th>
+          <th>Thành tiền</th>
+        </tr>
+      </thead>
+      <tbody id="luongTable">
+        <tr><td>Ngày công 100%</td><td><input type="number" id="ngayCong" placeholder="ngày" aria-label="Ngày công"></td><td id="tienNgayCong">0</td></tr>
+        <tr><td>Tăng ca 150%</td><td><input type="number" id="tc150" placeholder="giờ" aria-label="Tăng ca 150%"></td><td id="tienTC150">0</td></tr>
+        <tr><td>Tăng ca 200%</td><td><input type="number" id="tc200" placeholder="giờ" aria-label="Tăng ca 200%"></td><td id="tienTC200">0</td></tr>
+        <tr><td>Trợ cấp đêm 30%</td><td><input type="number" id="tcDem30" placeholder="giờ" aria-label="Trợ cấp đêm 30%"></td><td id="tienDem30">0</td></tr>
+        <tr style="color:red;"><td>Ngày công 200%</td><td><input type="number" id="ngayCong200" placeholder="ngày" aria-label="Ngày công 200%"></td><td id="tienCong200">0</td></tr>
+        <tr style="color:red;"><td>Tăng ca 300%</td><td><input type="number" id="tc300" placeholder="giờ" aria-label="Tăng ca 300%"></td><td id="tienTC300">0</td></tr>
+        <tr style="color:red;"><td>Tăng ca 340%</td><td><input type="number" id="tc340" placeholder="giờ" aria-label="Tăng ca 340%"></td><td id="tienTC340">0</td></tr>
+        <tr style="color:red;"><td>Trợ cấp đêm 70%</td><td><input type="number" id="tcDem70" placeholder="giờ" aria-label="Trợ cấp đêm 70%"></td><td id="tienDem70">0</td></tr>
+        <tr><td>Ngày phép năm</td><td><input type="number" id="phepNam" placeholder="ngày" aria-label="Ngày phép năm"></td><td id="tienPhepNam">0</td></tr>
+        <tr><td>Ngày lễ</td><td><input type="number" id="le" placeholder="ngày" aria-label="Ngày lễ"></td><td id="tienLe">0</td></tr>
+        <tr><td colspan="2">Phụ cấp ABC</td><td><input type="number" id="pcABC" aria-label="Phụ cấp ABC"></td></tr>
+        <tr><td colspan="2">Phụ cấp Chuyên cần</td><td>
+          <select id="pcChuyenCan" aria-label="Phụ cấp Chuyên cần">
+            <option value="0">0</option>
+            <option value="200000" selected>200000</option>
+          </select>
+        </td></tr>
+        <tr><td colspan="2">Phụ cấp thâm niên</td><td>
+          <select id="pcThamNien" aria-label="Phụ cấp thâm niên">
+            <option value="200000">200000</option>
+            <option value="300000">300000</option>
+            <option value="400000" selected>400000</option>
+          </select>
+        </td></tr>
+        <tr><td colspan="2">Phụ cấp chức vụ</td><td>
+          <select id="pcChucVu" aria-label="Phụ cấp chức vụ">
+            <option value="0">0</option>
+            <option value="100000">100000</option>
+          </select>
+        </td></tr>
+        <tr><td colspan="2">Hỗ trợ đi lại</td><td><input type="number" id="pcDiLai" aria-label="Hỗ trợ đi lại"></td></tr>
+        <tr><td colspan="2">Hỗ trợ điện thoại</td><td>
+          <select id="pcDienThoai" aria-label="Hỗ trợ điện thoại">
+            <option value="0">0</option>
+            <option value="1500000">1500000</option>
+            <option value="2500000">2500000</option>
+            <option value="3000000">3000000</option>
+            <option value="4000000">4000000</option>
+            <option value="5000000">5000000</option>
+          </select>
+        </td></tr>
+        <tr><td colspan="2">Hỗ trợ trẻ em dưới 6 tuổi</td><td>
+          <select id="pcTreEm" aria-label="Hỗ trợ trẻ em dưới 6 tuổi">
+            <option value="0">0</option>
+            <option value="50000">50000</option>
+            <option value="100000">100000</option>
+            <option value="150000">150000</option>
+            <option value="200000">200000</option>
+          </select>
+        </td></tr>
+        <tr><td colspan="2">Phụ cấp khác</td><td><input type="number" id="pcKhac" aria-label="Phụ cấp khác"></td></tr>
+        <tr><td colspan="2">Lương ngày lễ, tết, thông ca</td><td id="tienNgayLeTet">0</td></tr>
+        <tr style="background-color: yellow;"><td colspan="2">Tổng thu nhập</td><td id="tongLuong">0</td></tr>
+        <tr style="color:red;"><td colspan="2">Khấu trừ BHXH 10.5%</td><td id="tienTruBHXH">0</td></tr>
+        <tr style="color:red;"><td colspan="2">Khấu trừ Công đoàn 1%</td><td id="tienTruCD">0</td></tr>
+        <tr style="background-color: #cce5ff; font-weight: bold;"><td colspan="2">Thực lĩnh (chưa tính thuế)</td><td id="thucLinh">0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="bangPhu">
+    <h3>Lương ngày lễ, tết, thông ca</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Ngày</th>
+          <th>Khoản mục</th>
+          <th>Giờ</th>
+          <th>% lương</th>
+          <th>Thành tiền</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="3"><input type="number" aria-label="Ngày"></td>
+          <td>Giờ hành chính</td>
+          <td><input type="number" id="soGioHanhChinh1" placeholder="giờ" aria-label="Giờ hành chính 1"></td>
+          <td><input type="number" id="phuLuongHanhChinh" aria-label="Phụ cấp lương hành chính 1"></td>
+          <td id="tienHanhChinh">0</td>
+        </tr>
+        <tr>
+          <td>Tăng ca, thông ca</td>
+          <td><input type="number" id="soGioTangCa1" placeholder="giờ" aria-label="Tăng ca 1"></td>
+          <td><input type="number" id="phuLuongTangCa" aria-label="Phụ cấp tăng ca 1"></td>
+          <td id="tienTangCa">0</td>
+        </tr>
+        <tr>
+          <td>Trợ cấp đêm</td>
+          <td><input type="number" id="soGioDem1" placeholder="giờ" aria-label="Trợ cấp đêm 1"></td>
+          <td><input type="number" id="phuLuongDem" aria-label="Phụ cấp đêm 1"></td>
+          <td id="tienTroCapDem">0</td>
+        </tr>
+        <tr>
+          <td rowspan="3"><input type="number" aria-label="Ngày"></td>
+          <td>Giờ hành chính</td>
+          <td><input type="number" id="soGioHanhChinh2" placeholder="giờ" aria-label="Giờ hành chính 2"></td>
+          <td><input type="number" id="phuLuongHanhChinh2" aria-label="Phụ cấp lương hành chính 2"></td>
+          <td id="tienHanhChinh2">0</td>
+        </tr>
+        <tr>
+          <td>Tăng ca, thông ca</td>
+          <td><input type="number" id="soGioTangCa2" placeholder="giờ" aria-label="Tăng ca 2"></td>
+          <td><input type="number" id="phuLuongTangCa2" aria-label="Phụ cấp tăng ca 2"></td>
+          <td id="tienTangCa2">0</td>
+        </tr>
+        <tr>
+          <td>Trợ cấp đêm</td>
+          <td><input type="number" id="soGioDem2" placeholder="giờ" aria-label="Trợ cấp đêm 2"></td>
+          <td><input type="number" id="phuLuongDem2" aria-label="Phụ cấp đêm 2"></td>
+          <td id="tienTroCapDem2">0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="contact-box">
+    <p style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+      <span>Liên hệ:</span>
+      <a href="https://m.facebook.com/tdt93/" target="_blank">
+        <img src="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Facebook.png" width="20" height="20" alt="Facebook">
+        <span style="color: #1877F2; font-weight: bold;">Facebook</span>
+      </a>
+      <a href="http://zalo.me/trungpl" target="_blank">
+        <img src="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Zalo.png" width="20" height="20" alt="Zalo">
+        <span style="color: #0068FF; font-weight: bold;">Zalo</span>
+      </a>
+    </p>
+    <div class="bank-details">
+      <p>Ủng hộ tôi qua <span style="color:red;">Vietin</span><span style="color:blue;">Bank</span></p>
+      <p>Chủ TK: <span style="color:blue;">Trần Đức Trung</span></p>
+      <p>STK: <span id="stk" style="color:blue;">102829132222</span>
+        <button onclick="copySTK()">Copy</button>
+      </p>
+      <img src="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Vietinbank.jpeg" alt="Vietinbank QR" style="height:320px; display: block; margin: 0 auto;">
+    </div>
+  </div>
+
+  <div class="contact-box">
+    <h3>⬇ Link tải file Excel chấm công ⬇</h3>
+    <ul>
+      <li><img src="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Github.png" alt="GitHub" width="16"> <a href="https://github.com/o0oS2/Tinh-luong/raw/refs/heads/main/Ti%CC%81nh%20lu%CC%9Bo%CC%9Bng.xlsx" target="_blank" rel="noopener noreferrer">Link tải trực tiếp</a></li>
+      <li><img src="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Dropbox.png" alt="Dropbox" width="16"> <a href="https://www.dropbox.com/s/mplgbw5oao6ljvjmnmw2h/T-nh-l-ng.xlsx?dl=1" target="_blank" rel="noopener noreferrer">Link dự phòng</a></li>
+      <li><img src="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Apple.png" alt="Apple" width="16"> <a href="https://www.icloud.com/iclouddrive/0b3bNlgrOqzB2b32wjh1x9pjw" target="_blank" rel="noopener noreferrer">Link tải về iPhone</a></li>
+      <li><img src="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Excel.png" alt="Excel" width="16"> <a href="https://1drv.ms/x/c/6c3a670f4fe04eaf/EfyaGkUWCKBMuew6Q1rmHAsBkstY3ZKjImtMHBeKtW-VGQ?e=WvphtX" target="_blank" rel="noopener noreferrer">Link mở trong ứng dụng Excel</a></li>
+    </ul>
+  </div>
+
+  <div class="rules-box">
+    <h4>📌 Quy tắc tính bảo hiểm, tăng ca, trợ cấp và chuyên cần</h4>
+    <ul>
+      <li><b>Bảo hiểm:</b> = Lương cơ bản + PC thâm niên + PC chức vụ</li>
+      <li><b>Tăng ca:</b> = Lương cơ bản + PC thâm niên + PC chức vụ + PC đi lại</li>
+      <li><b>Ngày công chuẩn:</b> Số ngày trong tháng – số ngày Chủ nhật (tối đa 26 ngày)</li>
+      <li><b>Chuyên cần:</b> Mất nếu nghỉ việc riêng, ốm, đi muộn, về sớm > 1 ngày công (8 tiếng)</li>
+      <li><b>PC thâm niên:</b>
+        <ul style="margin-left: 20px;">
+          <li>Dưới 1 năm: 200.000 VND</li>
+          <li>Dưới 2 năm: 300.000 VND</li>
+          <li>Trên 2 năm: 400.000 VND</li>
+        </ul>
+      </li>
+    </ul>
+    <h4>🕒 Giờ tăng ca & trợ cấp đêm:</h4>
+    <ul>
+      <li><b>150%:</b> Tăng ca ca ngày hoặc sau 18:00</li>
+      <li><b>200%:</b> Tăng ca đêm (0h~1h, 4h~6h)</li>
+      <li><b>Trợ cấp đêm 30%:</b> 22h00 ~ 4h00</li>
+      <li><b>Thông ca 190%:</b> từ 17h00 trở đi (không trợ cấp đêm)</li>
+    </ul>
+    <h4>📅 Ca đêm T7 & CN:</h4>
+    <ul>
+      <li><b>Ca đêm T7:</b> Trước 0h00 như ngày thường; Sau 0h00: 200%, trợ cấp đêm 70%, tăng ca 340%</li>
+      <li><b>Ca đêm CN:</b> Trước 0h00: 200%, trợ cấp đêm 70%; Sau 0h00 như ngày thường</li>
+      <li><b>Thông ca CN:</b> Sau 17h00: 380%</li>
+    </ul>
+    <h4>🎉 Ngày lễ, Tết:</h4>
+    <ul>
+      <li><b>Ca ngày lễ:</b> Ca ngày: 300%, tăng ca 450%</li>
+      <li><b>Ca đêm trước lễ (VD 31/12):</b> Trước 0h00 như thường; Sau 0h00: 300%, trợ cấp đêm 90%, tăng ca 510%</li>
+      <li><b>Ca đêm ngày lễ (VD 1/1):</b> Trước 0h00: 300%, trợ cấp đêm 90%; Sau 0h00: như ngày thường</li>
+      <li><b>Ca ngày Tết âm lịch:</b> 500%</li>
+      <li><b>Ca đêm Tết âm lịch:</b> 590%</li>
+    </ul>
+  </div>
+
+  <div class="ad-block-box">
+    <h3 style="font-size: 16px;">CHẶN QUẢNG CÁO TRÊN ĐIỆN THOẠI</h3>
+    <ul>
+      <li>DNS, VPN 1.1.1.1 - Cloudflare tăng tốc Internet</li>
+      <li>Mã hoá dữ liệu an toàn, bảo mật</li>
+      <li>Chặn: mã độc, lừa đảo, theo dõi, cờ bạc, quảng cáo, nội dung độc hại...</li>
+    </ul>
+    <div>🔗 <a href="https://o0os2.github.io/DNS-Filter/" target="_blank" style="color: #0073e6;">Xem hướng dẫn tại đây</a></div>
+  </div>
+
+  <script>
+    function copySTK() {
+      const stkText = document.getElementById("stk").innerText;
+      navigator.clipboard.writeText(stkText).then(() => {
+        alert("Đã sao chép số tài khoản: " + stkText);
+      }).catch(err => {
+        alert("Lỗi khi sao chép!");
+        console.error("Clipboard copy failed:", err);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Constants
+      const DEFAULT_VALUES = {
+        pcDiLai: 500000,
+        pcChuyenCan: 200000,
+        pcThamNien: 400000,
+      };
+
+      const PERCENTAGES = {
+        BHXH: 0.105,
+        CONG_DOAN: 0.01,
+        TC_150: 1.5,
+        TC_200: 2,
+        TC_300: 3,
+        TC_340: 3.4,
+        TC_DEM_30: 0.3,
+        TC_DEM_70: 0.7,
+        NGAY_CONG_200: 2,
+      };
+
+      const DOM = {
+        luongCoBan: document.getElementById("luongCoBan"),
+        ngayCongChuan: document.getElementById("ngayCongChuan"),
+        pcThamNien: document.getElementById("pcThamNien"),
+        pcChucVu: document.getElementById("pcChucVu"),
+        pcDiLai: document.getElementById("pcDiLai"),
+        pcChuyenCan: document.getElementById("pcChuyenCan"),
+        pcABC: document.getElementById("pcABC"),
+        pcDienThoai: document.getElementById("pcDienThoai"),
+        pcTreEm: document.getElementById("pcTreEm"),
+        pcKhac: document.getElementById("pcKhac"),
+        tongLuong: document.getElementById("tongLuong"),
+        tienTruBHXH: document.getElementById("tienTruBHXH"),
+        tienTruCD: document.getElementById("tienTruCD"),
+        thucLinh: document.getElementById("thucLinh"),
+        tienNgayLeTet: document.getElementById("tienNgayLeTet"),
+      };
+
+      const MAIN_TABLE_FIELDS = [
+        { input: "ngayCong", output: "tienNgayCong", multiplier: 1, unit: "ngayCong" },
+        { input: "tc150", output: "tienTC150", multiplier: PERCENTAGES.TC_150, unit: "tangCa" },
+        { input: "tc200", output: "tienTC200", multiplier: PERCENTAGES.TC_200, unit: "tangCa" },
+        { input: "tcDem30", output: "tienDem30", multiplier: PERCENTAGES.TC_DEM_30, unit: "troCapDem" },
+        { input: "ngayCong200", output: "tienCong200", multiplier: PERCENTAGES.NGAY_CONG_200, unit: "ngayCong" },
+        { input: "tc300", output: "tienTC300", multiplier: PERCENTAGES.TC_300, unit: "tangCa" },
+        { input: "tc340", output: "tienTC340", multiplier: PERCENTAGES.TC_340, unit: "tangCa" },
+        { input: "tcDem70", output: "tienDem70", multiplier: PERCENTAGES.TC_DEM_70, unit: "troCapDem" },
+        { input: "phepNam", output: "tienPhepNam", multiplier: 1, unit: "ngayCong" },
+        { input: "le", output: "tienLe", multiplier: 1, unit: "ngayCong" },
+      ];
+
+      const PHU_TABLE_FIELDS = [
+        { hours: "soGioHanhChinh1", rate: "phuLuongHanhChinh", output: "tienHanhChinh", type: "hanhChinh" },
+        { hours: "soGioTangCa1", rate: "phuLuongTangCa", output: "tienTangCa", type: "tangCa" },
+        { hours: "soGioDem1", rate: "phuLuongDem", output: "tienTroCapDem", type: "dem" },
+        { hours: "soGioHanhChinh2", rate: "phuLuongHanhChinh2", output: "tienHanhChinh2", type: "hanhChinh" },
+        { hours: "soGioTangCa2", rate: "phuLuongTangCa2", output: "tienTangCa2", type: "tangCa" },
+        { hours: "soGioDem2", rate: "phuLuongDem2", output: "tienTroCapDem2", type: "dem" },
+      ];
+
+      const PHU_CAP_FIELDS = ["pcABC", "pcChuyenCan", "pcThamNien", "pcChucVu", "pcDiLai", "pcDienThoai", "pcTreEm", "pcKhac"];
+
+      // Initialize default values
+      if (DOM.pcDiLai) DOM.pcDiLai.value = DEFAULT_VALUES.pcDiLai;
+      if (DOM.pcChuyenCan) DOM.pcChuyenCan.value = DEFAULT_VALUES.pcChuyenCan;
+      if (DOM.pcThamNien) DOM.pcThamNien.value = DEFAULT_VALUES.pcThamNien;
+
+      // Debounce function
+      const debounce = (func, delay) => {
+        let timeoutId;
+        return (...args) => {
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => func(...args), delay);
+        };
+      };
+
+      // Calculate base rates
+      const getBaseRates = () => {
+        const luongCoBan = parseFloat(DOM.luongCoBan?.value) || 0;
+        const ngayCongChuan = parseFloat(DOM.ngayCongChuan?.value) || 1;
+        const phuCapThamNien = parseFloat(DOM.pcThamNien?.value) || 0;
+        const phuCapChucVu = parseFloat(DOM.pcChucVu?.value) || 0;
+        const hoTroDiLai = parseFloat(DOM.pcDiLai?.value) || 0;
+
+        return {
+          luongNgayCong: luongCoBan / ngayCongChuan,
+          luongTangCa: (luongCoBan + phuCapThamNien + phuCapChucVu + hoTroDiLai) / ngayCongChuan / 8,
+          troCapDem: (luongCoBan + phuCapThamNien + phuCapChucVu + hoTroDiLai) / ngayCongChuan / 8,
+          luongDongBH: luongCoBan + phuCapThamNien + phuCapChucVu,
+        };
+      };
+
+      // Calculate main table amounts
+      const calculateMainTable = (rates) => {
+        let total = 0;
+        MAIN_TABLE_FIELDS.forEach(({ input, output, multiplier, unit }) => {
+          const inputElement = document.getElementById(input);
+          const outputElement = document.getElementById(output);
+          if (!inputElement || !outputElement) {
+            console.warn(`Element missing: input=${input}, output=${output}`);
+            return;
+          }
+          const value = parseFloat(inputElement.value) || 0;
+          const rate = unit === "ngayCong" ? rates.luongNgayCong : unit === "tangCa" ? rates.luongTangCa : rates.troCapDem;
+          const amount = Math.round(value * multiplier * rate);
+          outputElement.textContent = amount.toLocaleString("vi-VN");
+          total += amount;
+        });
+        return total;
+      };
+
+      // Calculate secondary table amounts
+      const calculateBangPhu = (rates) => {
+        let total = 0;
+        PHU_TABLE_FIELDS.forEach(({ hours, rate, output, type }) => {
+          const hoursElement = document.getElementById(hours);
+          const rateElement = document.getElementById(rate);
+          const outputElement = document.getElementById(output);
+          if (!hoursElement || !rateElement || !outputElement) {
+            console.warn(`Element missing: hours=${hours}, rate=${rate}, output=${output}`);
+            return;
+          }
+          const hoursValue = parseFloat(hoursElement.value) || 0;
+          const rateValue = parseFloat(rateElement.value) || 0;
+          const unitRate = type === "tangCa" ? rates.luongTangCa / 100 : rates.luongNgayCong / 800;
+          const amount = Math.round(hoursValue * rateValue * unitRate);
+          outputElement.textContent = amount.toLocaleString("vi-VN");
+          total += amount;
+        });
+        return total;
+      };
+
+      // Calculate allowances
+      const calculatePhuCap = () => {
+        return PHU_CAP_FIELDS.reduce((sum, id) => {
+          const element = document.getElementById(id);
+          if (!element) {
+            console.warn(`Phụ cấp element missing: ${id}`);
+            return sum;
+          }
+          return sum + (parseFloat(element.value) || 0);
+        }, 0);
+      };
+
+      // Main calculation function
+      const tinhLuong = () => {
+        const rates = getBaseRates();
+        let totalIncome = calculateMainTable(rates);
+        const tienNgayLeTet = calculateBangPhu(rates);
+        if (DOM.tienNgayLeTet) DOM.tienNgayLeTet.textContent = tienNgayLeTet.toLocaleString("vi-VN");
+        totalIncome += tienNgayLeTet;
+        totalIncome += calculatePhuCap();
+        if (DOM.tongLuong) DOM.tongLuong.textContent = Math.round(totalIncome).toLocaleString("vi-VN");
+        const tienTruBHXH = Math.round(rates.luongDongBH * PERCENTAGES.BHXH);
+        const tienTruCD = Math.round(rates.luongDongBH * PERCENTAGES.CONG_DOAN);
+        if (DOM.tienTruBHXH) DOM.tienTruBHXH.textContent = tienTruBHXH.toLocaleString("vi-VN");
+        if (DOM.tienTruCD) DOM.tienTruCD.textContent = tienTruCD.toLocaleString("vi-VN");
+        const thucLinh = Math.round(totalIncome - tienTruBHXH - tienTruCD);
+        if (DOM.thucLinh) DOM.thucLinh.textContent = thucLinh.toLocaleString("vi-VN");
+      };
+
+      // Debounced calculation
+      const debouncedTinhLuong = debounce(tinhLuong, 200);
+
+      // Set up event listeners
+      const inputs = document.querySelectorAll("input, select");
+      if (inputs.length === 0) {
+        console.error("No input or select elements found in the document.");
+      }
+      inputs.forEach((input, index) => {
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const next = inputs[index + 1];
+            if (next) next.focus();
+          }
+        });
+        input.addEventListener("input", debouncedTinhLuong);
+      });
+
+      // Initial calculation
+      try {
+        tinhLuong();
+      } catch (error) {
+        console.error("Initial calculation failed:", error);
+      }
+    });
+  </script>
+</body>
+</html>
+```
