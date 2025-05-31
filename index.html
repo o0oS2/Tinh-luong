@@ -256,18 +256,19 @@ select {
   </style>
 </head>
 <body>
-  <h1>BẢNG TÍNH LƯƠNG</h1>
+<h1 style="text-align: center; margin-bottom: 4px;">BẢNG TÍNH LƯƠNG</h1>
 
   <div class="input-row">
     <label for="luongCoBan">Lương cơ bản:</label>
     <input type="number" id="luongCoBan" value="" />
 
-    <label for="ngayCongChuan" style="margin-left: 16px;">Ngày công chuẩn:</label>
-    <select id="ngayCongChuan" name="ngayCongChuan">
-      <option value="24">24</option>
-      <option value="25">25</option>
-      <option value="26" selected>26</option>
+    <label for="ngayCongChuan" style="margin-left: 20px;">Ngày công chuẩn:</label>
+    <select id="ngayCongChuan" name="ngayCongChuan" style="width: 45px; text-align: center;">
+    <option value="24">24</option>
+    <option value="25">25</option>
+    <option value="26" selected>26</option>
     </select>
+
   </div>
 
   <div id="luongContainer">
@@ -341,7 +342,7 @@ select {
   </div>
 
 <div id="bangPhu">
-   <h3 style="text-align: center; color: red;">Lương ngày lễ, tết, thông ca</h3>
+<h3 style="text-align: center; color: red; margin-top: 8px; margin-bottom: 8px;">Lương ngày lễ, tết, thông ca</h3>
 
     <table>
       <thead>
