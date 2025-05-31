@@ -77,10 +77,14 @@ table select {
 #bangPhu table td:nth-child(3),
 #bangPhu table th:nth-child(3) {
   width: 10%;
+  min-width: 50px;
+  max-width: 100px
 }
 #bangPhu table td:nth-child(4),
 #bangPhu table th:nth-child(4) {
   width: 15%;
+  min-width: 50px;
+  max-width: 100px
 }
 #bangPhu table td:nth-child(5),
 #bangPhu table th:nth-child(5) {
@@ -248,10 +252,12 @@ select {
       }
     }
 #bangPhu table td:nth-child(4) input[type="number"] {
-  width: 40px;
-  font-size: 12px;
-  padding: 2px 4px;
-  height: 18px;
+  width: 100%;           /* Chiếm toàn bộ chiều rộng ô */
+  font-size: 13px;
+  padding: 2px 6px;
+  height: 22px;
+  text-align: right;
+  box-sizing: border-box;
 }
 /* Giới hạn chiều rộng bảng trên máy tính */
 #luongContainer, #bangPhu {
