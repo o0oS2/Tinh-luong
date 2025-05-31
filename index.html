@@ -254,26 +254,8 @@ select {
 }
 
   </style>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
 </head>
-<button id="btnCapture">Chụp ảnh màn hình</button>
-
-<script>
-  document.getElementById('btnCapture').addEventListener('click', function() {
-    const captureElement = document.getElementById('captureArea');
-    html2canvas(captureElement).then(canvas => {
-      // Tạo một link để tải ảnh về
-      const link = document.createElement('a');
-      link.download = 'luong_capture.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    });
-  });
-</script>
-
 <body>
-<div id="captureArea">
   <h1>BẢNG TÍNH LƯƠNG</h1>
 
   <div class="input-row">
@@ -413,7 +395,7 @@ select {
       </tbody>
     </table>
   </div>
-</div>
+
 <p style="display: flex; align-items: center; gap: 15px; margin-top: 10px; margin-bottom: 0;">
   <span>Liên hệ:</span>
   <a href="https://m.facebook.com/tdt93/" target="_blank" style="text-decoration: none; display: inline-flex; align-items: center;">
