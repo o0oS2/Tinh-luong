@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tính Lương - Đức Trung</title>
-  <link rel="icon" href="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Icon.png" type="image/png" />
+<link rel="icon" href="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Icon.png" type="image/png" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -418,9 +418,24 @@ select {
 <div style="text-align:center; margin-top:10px; font-weight:bold; line-height:0.8;">
   <p>Ủng hộ tôi qua <span style="color:red;">Vietin</span><span style="color:blue;">Bank</span></p>
   <p>Chủ TK: <span style="color:blue;">Trần Đức Trung</span></p>
-  <p>STK: <span style="color:blue;">102829132222</span></p>
+  <p>STK: 
+    <span id="stk" style="color:blue;">102829132222</span>
+    <button onclick="copySTK()" style="margin-left:10px; padding:4px 8px;">Copy</button>
+  </p>
   <img src="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Vietinbank.jpeg" alt="Vietinbank QR" style="height:320px;">
 </div>
+
+<script>
+  function copySTK() {
+    const stkText = document.getElementById("stk").innerText;
+    navigator.clipboard.writeText(stkText).then(() => {
+      alert("Đã sao chép số tài khoản: " + stkText);
+    }).catch(err => {
+      alert("Lỗi khi sao chép!");
+      console.error("Clipboard copy failed:", err);
+    });
+  }
+</script>
 </div>
 
 <div style="margin: 5px 0; padding: 4px 8px; border: 1px solid #ccc; border-radius: 6px;">
@@ -432,7 +447,7 @@ select {
     </li>
     <li style="margin-bottom: 6px;">
       <img src="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Dropbox.png" alt="Dropbox" width="16" style="vertical-align: middle; margin-right: 4px;">
-      <a href="https://www.dropbox.com/scl/fi/mplgbw5oao6ljvjmnmw2h/T-nh-l-ng.xlsx?rlkey=2s7bp01shns22j8nxl1ruf3iu&st=g73uat7p&dl=1" target="_blank" rel="noopener noreferrer">Link dự phòng</a>
+      <a href="https://www.dropbox.com/s/mplgbw5oao6ljvjmnmw2h/T-nh-l-ng.xlsx?dl=1" target="_blank" rel="noopener noreferrer">Link dự phòng</a>
     </li>
     <li style="margin-bottom: 6px;">
       <img src="https://raw.githubusercontent.com/o0oS2/Tinh-luong/main/Image/Apple.png" alt="Apple" width="16" style="vertical-align: middle; margin-right: 4px;">
