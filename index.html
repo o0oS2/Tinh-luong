@@ -282,7 +282,32 @@ select {
   max-width: 600px;
   margin: 0 auto; /* Căn giữa */
 }
-
+/* Toast notification styles */
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    
+    .toast.show {
+      opacity: 1;
+    }
+    
+    .toast::before {
+      content: "✓ ";
+      margin-right: 5px;
+    }
 
   </style>
 </head>
