@@ -474,15 +474,42 @@ select {
 </div>
 
 <script>
-  function copySTK() {
-    const stkText = document.getElementById("stk").innerText;
-    navigator.clipboard.writeText(stkText).then(() => {
-      alert("Đã sao chép số tài khoản: " + stkText);
-    }).catch(err => {
-      alert("Lỗi khi sao chép!");
-      console.error("Clipboard copy failed:", err);
-    });
-  }
+  function showToast(message) {
+      // Remove existing toast if any
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) {
+        existingToast.remove();
+      }
+      
+      // Create new toast
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      // Show toast with animation
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 100);
+      
+      // Hide and remove toast after 3 seconds
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 3000);
+    }
+    
+    function copySTK() {
+      const stkText = document.getElementById("stk").innerText;
+      navigator.clipboard.writeText(stkText).then(() => {
+        showToast("Đã sao chép STK: " + stkText);
+      }).catch(err => {
+        showToast("Lỗi khi sao chép!");
+        console.error("Clipboard copy failed:", err);
+      });
+    }
 </script>
 </div>
 
