@@ -88,6 +88,7 @@ table select {
 #bangPhu table td:nth-child(2),
 #bangPhu table th:nth-child(2) {
   width: 55%;
+    min-width: 100px;
 }
 #bangPhu table td:nth-child(3),
 #bangPhu table th:nth-child(3) {
@@ -380,38 +381,38 @@ select {
         </tr>
       </thead>
       <tbody id="luongTable">
-        <tr><td>✅ Ngày công 100%</td><td><input type="number" id="ngayCong" placeholder="ngày" /></td><td id="tienNgayCong">0</td></tr>
-        <tr><td>☀️ Tăng ca 150%</td><td><input type="number" id="tc150" placeholder="giờ" /></td><td id="tienTC150">0</td></tr>
-        <tr><td>🌙 Tăng ca 200%</td><td><input type="number" id="tc200" placeholder="giờ" /></td><td id="tienTC200">0</td></tr>
-        <tr><td>🌃 Trợ cấp đêm 30%</td><td><input type="number" id="tcDem30" placeholder="giờ" /></td><td id="tienDem30">0</td></tr>
-        <tr style="color:red;"><td>😴 Ngày công 200%</td><td><input type="number" id="ngayCong200" placeholder="ngày" /></td><td id="tienCong200">0</td></tr>
-        <tr style="color:red;"><td>☀️ Tăng ca 300%</td><td><input type="number" id="tc300" placeholder="giờ" /></td><td id="tienTC300">0</td></tr>
-        <tr style="color:red;"><td>🌙 Tăng ca 340%</td><td><input type="number" id="tc340" placeholder="giờ" /></td><td id="tienTC340">0</td></tr>
-        <tr style="color:red;"><td>🌃 Trợ cấp đêm 70%</td><td><input type="number" id="tcDem70" placeholder="giờ" /></td><td id="tienDem70">0</td></tr>
-        <tr><td>🛌 Phép năm</td><td><input type="number" id="phepNam" placeholder="ngày" /></td><td id="tienPhepNam">0</td></tr>
-        <tr><td>🎉 Ngày lễ</td><td><input type="number" id="le" placeholder="ngày" /></td><td id="tienLe">0</td></tr>
-        <tr><td colspan="2">💡 Phụ cấp kỹ năng ABC</td><td><input type="number" id="pcABC" /></td></tr>
-        <tr><td colspan="2">💯 Phụ cấp Chuyên cần</td><td>
+        <tr><td>Ngày công 100%</td><td><input type="number" id="ngayCong" placeholder="ngày" /></td><td id="tienNgayCong">0</td></tr>
+        <tr><td>Tăng ca 150%</td><td><input type="number" id="tc150" placeholder="giờ" /></td><td id="tienTC150">0</td></tr>
+        <tr><td>Tăng ca 200%</td><td><input type="number" id="tc200" placeholder="giờ" /></td><td id="tienTC200">0</td></tr>
+        <tr><td>Trợ cấp đêm 30%</td><td><input type="number" id="tcDem30" placeholder="giờ" /></td><td id="tienDem30">0</td></tr>
+        <tr style="color:red;"><td>Ngày công 200%</td><td><input type="number" id="ngayCong200" placeholder="ngày" /></td><td id="tienCong200">0</td></tr>
+        <tr style="color:red;"><td>Tăng ca 300%</td><td><input type="number" id="tc300" placeholder="giờ" /></td><td id="tienTC300">0</td></tr>
+        <tr style="color:red;"><td>Tăng ca 340%</td><td><input type="number" id="tc340" placeholder="giờ" /></td><td id="tienTC340">0</td></tr>
+        <tr style="color:red;"><td>Trợ cấp đêm 70%</td><td><input type="number" id="tcDem70" placeholder="giờ" /></td><td id="tienDem70">0</td></tr>
+        <tr><td>Phép năm</td><td><input type="number" id="phepNam" placeholder="ngày" /></td><td id="tienPhepNam">0</td></tr>
+        <tr><td>Ngày lễ</td><td><input type="number" id="le" placeholder="ngày" /></td><td id="tienLe">0</td></tr>
+        <tr><td colspan="2">Phụ cấp kỹ năng ABC</td><td><input type="number" id="pcABC" /></td></tr>
+        <tr><td colspan="2">Phụ cấp Chuyên cần</td><td>
           <select id="pcChuyenCan">
             <option value="0">0</option>
             <option value="200000" selected>200000</option>
           </select>
         </td></tr>
-        <tr><td colspan="2">⌛ Phụ cấp thâm niên</td><td>
+        <tr><td colspan="2">Phụ cấp thâm niên</td><td>
           <select id="pcThamNien">
             <option value="200000">200000</option>
             <option value="300000">300000</option>
             <option value="400000">400000</option>
           </select>
         </td></tr>
-        <tr><td colspan="2">👔 Phụ cấp chức vụ</td><td>
+        <tr><td colspan="2">Phụ cấp chức vụ</td><td>
           <select id="pcChucVu">
             <option value="0">0</option>
             <option value="100000">100000</option>
           </select>
         </td></tr>
-        <tr><td colspan="2">🏃‍♂️ Hỗ trợ đi lại</td><td><input type="number" id="pcDiLai" /></td></tr>
-        <tr><td colspan="2">📱 Hỗ trợ điện thoại</td><td>
+        <tr><td colspan="2">Hỗ trợ đi lại</td><td><input type="number" id="pcDiLai" /></td></tr>
+        <tr><td colspan="2">Hỗ trợ điện thoại</td><td>
           <select id="pcDienThoai">
             <option value="0">0</option>
             <option value="1500000">1500000</option>
@@ -421,7 +422,7 @@ select {
             <option value="5000000">5000000</option>
           </select>
         </td></tr>
-        <tr><td colspan="2">👶 Hỗ trợ trẻ em dưới 6 tuổi</td><td>
+        <tr><td colspan="2">Hỗ trợ trẻ em dưới 6 tuổi</td><td>
           <select id="pcTreEm">
             <option value="0">0</option>
             <option value="50000">50000</option>
@@ -430,11 +431,11 @@ select {
             <option value="200000">200000</option>
           </select>
         </td></tr>
-        <tr><td colspan="2">✨ Phụ cấp khác</td><td><input type="number" id="pcKhac" /></td></tr>
-        <tr><td colspan="2">🎊 Lương ngày lễ, tết, thông ca</td><td id="tienNgayLeTet">0</td></tr>
+        <tr><td colspan="2">Phụ cấp khác</td><td><input type="number" id="pcKhac" /></td></tr>
+        <tr><td colspan="2">Lương ngày lễ, tết, thông ca</td><td id="tienNgayLeTet">0</td></tr>
         <tr style="background-color: yellow;"><td colspan="2">🎯 Tổng thu nhập</td><td id="tongLuong">0</td></tr>
-        <tr style="color:red;"><td colspan="2">🛡️ Khấu trừ BHXH 10.5%</td><td id="tienTruBHXH">0</td></tr>
-        <tr style="color:red;"><td colspan="2">🤝 Khấu trừ Công đoàn 1%</td><td id="tienTruCD">0</td></tr>
+        <tr style="color:red;"><td colspan="2">Khấu trừ BHXH 10.5%</td><td id="tienTruBHXH">0</td></tr>
+        <tr style="color:red;"><td colspan="2">Khấu trừ Công đoàn 1%</td><td id="tienTruCD">0</td></tr>
         <tr style="background-color: #cce5ff; font-weight: bold;"><td colspan="2">💎 Thực lĩnh (chưa tính thuế)</td><td id="thucLinh">0</td></tr>
       </tbody>
     </table>
@@ -456,38 +457,38 @@ select {
       <tbody>
         <tr>
           <td rowspan="3"><input type="number" /></td>
-          <td>☀️ Giờ hành chính</td>
+          <td>Giờ hành chính</td>
           <td><input type="number" id="soGioHanhChinh1" placeholder="giờ" /></td>
           <td><input type="number" id="phuLuongHanhChinh" /></td>
           <td id="tienHanhChinh">0</td>
         </tr>
         <tr>
-          <td>🛠️ Tăng ca, thông ca</td>
+          <td>Tăng ca, thông ca</td>
           <td><input type="number" id="soGioTangCa1" placeholder="giờ" /></td>
           <td><input type="number" id="phuLuongTangCa" /></td>
           <td id="tienTangCa">0</td>
         </tr>
         <tr>
-          <td>🌙 Trợ cấp đêm</td>
+          <td>Trợ cấp đêm</td>
           <td><input type="number" id="soGioDem1" placeholder="giờ" /></td>
           <td><input type="number" id="phuLuongDem" /></td>
           <td id="tienTroCapDem">0</td>
         </tr>
         <tr>
           <td rowspan="3"><input type="number" /></td>
-          <td>☀️ Giờ hành chính</td>
+          <td>Giờ hành chính</td>
           <td><input type="number" id="soGioHanhChinh2" placeholder="giờ" /></td>
           <td><input type="number" id="phuLuongHanhChinh2" /></td>
           <td id="tienHanhChinh2">0</td>
         </tr>
         <tr>
-          <td>🛠️ Tăng ca, thông ca</td>
+          <td>Tăng ca, thông ca</td>
           <td><input type="number" id="soGioTangCa2" placeholder="giờ" /></td>
           <td><input type="number" id="phuLuongTangCa2" /></td>
           <td id="tienTangCa2">0</td>
         </tr>
         <tr>
-          <td>🌙 Trợ cấp đêm</td>
+          <td>Trợ cấp đêm</td>
           <td><input type="number" id="soGioDem2" placeholder="giờ" /></td>
           <td><input type="number" id="phuLuongDem2" /></td>
           <td id="tienTroCapDem2">0</td>
