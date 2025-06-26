@@ -81,50 +81,68 @@ table select {
     width: 35% !important;
   }
 /* ==== CHỈNH KÍCH THƯỚC CỘT BẢNG PHỤ ==== */
+#bangPhu table {
+  table-layout: fixed; /* Thêm dòng này để cố định layout bảng */
+  width: 100%;
+}
+
 #bangPhu table td:nth-child(1),
 #bangPhu table th:nth-child(1) {
   width: 5%;
 }
 #bangPhu table td:nth-child(2),
 #bangPhu table th:nth-child(2) {
-  width: 55%;
+  width: 35%;
 }
 #bangPhu table td:nth-child(3),
 #bangPhu table th:nth-child(3) {
-  width: 10%;
+  width: 20%; /* Giữ nguyên 10% */
+  max-width: 60px; /* Thêm max-width để giới hạn */
 }
 #bangPhu table td:nth-child(4),
 #bangPhu table th:nth-child(4) {
-  width: 15%;
+  width: 20%;
 }
 #bangPhu table td:nth-child(5),
 #bangPhu table th:nth-child(5) {
-  width: 25%;
+  width: 20%; /* Giảm từ 25% xuống 15% */
 }
-  /* Chỉnh cột trên điện thoại bảng phụ */
-    #bangPhu table th:nth-child(1),
+
+/* Kiểm soát input trong cột 3 bảng phụ */
+#bangPhu table td:nth-child(3) input[type="number"] {
+  width: 100% !important;
+  max-width: 50px; /* Giới hạn chiều rộng tối đa */
+  font-size: 12px;
+  padding: 2px 4px;
+  height: 22px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Responsive cho màn hình nhỏ bảng phụ */
+@media screen and (max-width: 768px) {
+  #bangPhu table th:nth-child(1),
   #bangPhu table td:nth-child(1) {
-    width: 5% !important;
+    width: 10% !important;
   }
   #bangPhu table th:nth-child(2),
   #bangPhu table td:nth-child(2) {
-    width: 55% !important;
+    width: 31% !important;
   }
-
   #bangPhu table th:nth-child(3),
   #bangPhu table td:nth-child(3) {
-    width: 10% !important;
+    width: 17% !important;
+    max-width: 50px;
   }
-
   #bangPhu table th:nth-child(4),
   #bangPhu table td:nth-child(4) {
-    width: 15% !important;
+    width: 17% !important;
   }
-
   #bangPhu table th:nth-child(5),
   #bangPhu table td:nth-child(5) {
     width: 25% !important;
   }
+}
 
 #luongContainer table th,
 #luongContainer table td {
@@ -305,14 +323,6 @@ select {
   }
 }
 
-#bangPhu table td:nth-child(4) input[type="number"] {
-  width: 100%;           /* Chiếm toàn bộ chiều rộng ô */
-  font-size: 13px;
-  padding: 2px 6px;
-  height: 22px;
-  text-align: right;
-  box-sizing: border-box;
-}
 /* Giới hạn chiều rộng bảng trên máy tính */
 #luongContainer, #bangPhu {
   max-width: 600px;
