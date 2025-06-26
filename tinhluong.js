@@ -133,6 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
     tong += updateTien("tc300", "tienTC300", so => luongTangCa * 3 * so);
     tong += updateTien("tc340", "tienTC340", so => luongTangCa * 3.4 * so);
     tong += updateTien("tcDem70", "tienDem70", so => troCapDem * 0.7 * so);
+    tong += updateTien("thongca380", "tienthongca380", so => luongTangCa * 3.8 * so);
     tong += updateTien("phepNam", "tienPhepNam", so => luongNgayCong * so);
     tong += updateTien("le", "tienLe", so => luongNgayCong * so);
 
