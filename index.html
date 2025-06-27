@@ -557,6 +557,11 @@ select {
                 height: 160px;
             }
         }
+    #luongCoBan::placeholder { /* chỉnh chữ mờ lương cơ bản */
+  font-size: 14px; /* Cỡ chữ nhỏ cho placeholder */
+  color: #aaa;     /* Màu mờ (tùy chọn) */
+  font-weight: normal;   /* Tắt in đậm */
+}
   </style>
 </head>
 <body>
@@ -568,7 +573,7 @@ select {
     <div class="input-row">
       <div class="group">
         <label for="luongCoBan"><strong>LCB:</strong></label>
-        <input type="text" id="luongCoBan" placeholder="Lương cơ bản" style="height: 20px;" />
+        <input type="text" id="luongCoBan" placeholder="nhập lương cơ bản" style="height: 20px;" />
       </div>
 
       <div class="group date-group">
