@@ -46,6 +46,48 @@ document.addEventListener("DOMContentLoaded", function () {
     namSelect.appendChild(option);
   }
 
+  // === Phần định dạng số cho input lương cơ bản ===
+  
+  // Hàm định dạng số thành chuỗi có dấu chấm phân cách
+  function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
+  // Hàm loại bỏ dấu chấm để lấy số thực
+  function parseNumber(str) {
+    return parseInt(str.replace(/\./g, "")) || 0;
+  }
+
+  // Xử lý định dạng cho input lương cơ bản
+  const luongCoBanInput = document.getElementById("luongCoBan");
+  if (luongCoBanInput) {
+    // Xử lý khi người dùng nhập
+    luongCoBanInput.addEventListener("input", function(e) {
+      let value = e.target.value.replace(/\./g, ""); // Loại bỏ dấu chấm
+      value = value.replace(/[^0-9]/g, ""); // Chỉ giữ lại số
+      
+      if (value) {
+        e.target.value = formatNumber(value);
+      }
+    });
+
+    // Xử lý khi focus ra khỏi input
+    luongCoBanInput.addEventListener("blur", function(e) {
+      let value = parseNumber(e.target.value);
+      if (value > 0) {
+        e.target.value = formatNumber(value);
+      }
+    });
+
+    // Xử lý khi focus vào input (có thể bỏ định dạng để dễ chỉnh sửa)
+    luongCoBanInput.addEventListener("focus", function(e) {
+      let value = parseNumber(e.target.value);
+      if (value > 0) {
+        e.target.value = value.toString();
+      }
+    });
+  }
+
   // === Phần còn lại của code tính lương ===
 
   // Giá trị mặc định cho một số phụ cấp
@@ -104,7 +146,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function tinhLuong() {
-    const luongCoBan = +document.getElementById("luongCoBan")?.value || 0;
+    // Sử dụng parseNumber để lấy giá trị số thực từ input đã được định dạng
+    const luongCoBan = parseNumber(document.getElementById("luongCoBan")?.value || "0");
     const ngayCongChuan = tinhNgayCongChuan();
 
     const phuCapThamNien = +document.getElementById("pcThamNien")?.value || 0;
