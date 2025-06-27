@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     namSelect.appendChild(option);
   }
 
-  // === Phần định dạng số cho input lương cơ bản ===
+  // === Phần định dạng số cho tất cả input tiền ===
   
   // Hàm định dạng số thành chuỗi có dấu chấm phân cách
   function formatNumber(num) {
@@ -58,35 +58,47 @@ document.addEventListener("DOMContentLoaded", function () {
     return parseInt(str.replace(/\./g, "")) || 0;
   }
 
-  // Xử lý định dạng cho input lương cơ bản
-  const luongCoBanInput = document.getElementById("luongCoBan");
-  if (luongCoBanInput) {
-    // Xử lý khi người dùng nhập
-    luongCoBanInput.addEventListener("input", function(e) {
-      let value = e.target.value.replace(/\./g, ""); // Loại bỏ dấu chấm
-      value = value.replace(/[^0-9]/g, ""); // Chỉ giữ lại số
-      
-      if (value) {
-        e.target.value = formatNumber(value);
-      }
-    });
+  // Danh sách tất cả input cần định dạng số
+  const moneyInputIds = [
+    "luongCoBan", "pcABC", "pcChuyenCan", "pcThamNien",
+    "pcChucVu", "pcDiLai", "pcDienThoai", "pcTreEm", "pcKhac"
+  ];
 
-    // Xử lý khi focus ra khỏi input
-    luongCoBanInput.addEventListener("blur", function(e) {
-      let value = parseNumber(e.target.value);
-      if (value > 0) {
-        e.target.value = formatNumber(value);
-      }
-    });
+  // Áp dụng định dạng số cho tất cả input tiền
+  moneyInputIds.forEach(inputId => {
+    const input = document.getElementById(inputId);
+    if (input) {
+      // Xử lý khi người dùng nhập
+      input.addEventListener("input", function(e) {
+        let value = e.target.value.replace(/\./g, ""); // Loại bỏ dấu chấm
+        value = value.replace(/[^0-9]/g, ""); // Chỉ giữ lại số
+        
+        if (value) {
+          e.target.value = formatNumber(value);
+        }
+        // Tính lại lương ngay khi nhập
+        tinhLuong();
+      });
 
-    // Xử lý khi focus vào input (có thể bỏ định dạng để dễ chỉnh sửa)
-    luongCoBanInput.addEventListener("focus", function(e) {
-      let value = parseNumber(e.target.value);
-      if (value > 0) {
-        e.target.value = value.toString();
-      }
-    });
-  }
+      // Xử lý khi focus ra khỏi input
+      input.addEventListener("blur", function(e) {
+        let value = parseNumber(e.target.value);
+        if (value > 0) {
+          e.target.value = formatNumber(value);
+        }
+        // Tính lại lương khi blur
+        tinhLuong();
+      });
+
+      // Xử lý khi focus vào input (có thể bỏ định dạng để dễ chỉnh sửa)
+      input.addEventListener("focus", function(e) {
+        let value = parseNumber(e.target.value);
+        if (value > 0) {
+          e.target.value = value.toString();
+        }
+      });
+    }
+  });
 
   // === Phần còn lại của code tính lương ===
 
@@ -97,10 +109,13 @@ document.addEventListener("DOMContentLoaded", function () {
     pcThamNien: 400000
   };
 
-  // Khởi tạo giá trị mặc định phụ cấp
-  if(document.getElementById("pcDiLai")) document.getElementById("pcDiLai").value = defaultValues.pcDiLai;
-  if(document.getElementById("pcChuyenCan")) document.getElementById("pcChuyenCan").value = defaultValues.pcChuyenCan;
-  if(document.getElementById("pcThamNien")) document.getElementById("pcThamNien").value = defaultValues.pcThamNien;
+  // Khởi tạo giá trị mặc định phụ cấp (với định dạng)
+  Object.keys(defaultValues).forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.value = formatNumber(defaultValues[id]);
+    }
+  });
 
   // Hàm tính ngayCongChuan dựa vào tháng và năm
   function tinhNgayCongChuan() {
@@ -132,9 +147,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (next) next.focus();
       }
     });
-    // Tính lương ngay khi thay đổi input/select
-    input.addEventListener("input", tinhLuong);
-    input.addEventListener("change", tinhLuong);
+    
+    // Chỉ thêm event listener input/change cho các input không phải tiền
+    // (vì các input tiền đã có xử lý riêng ở trên)
+    if (!moneyInputIds.includes(input.id)) {
+      input.addEventListener("input", tinhLuong);
+      input.addEventListener("change", tinhLuong);
+    }
   });
 
   // Khi thay đổi thang hoặc nam thì tính lương lại
@@ -150,9 +169,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const luongCoBan = parseNumber(document.getElementById("luongCoBan")?.value || "0");
     const ngayCongChuan = tinhNgayCongChuan();
 
-    const phuCapThamNien = +document.getElementById("pcThamNien")?.value || 0;
-    const phuCapChucVu = +document.getElementById("pcChucVu")?.value || 0;
-    const hoTroDiLai = +document.getElementById("pcDiLai")?.value || 0;
+    const phuCapThamNien = parseNumber(document.getElementById("pcThamNien")?.value || "0");
+    const phuCapChucVu = parseNumber(document.getElementById("pcChucVu")?.value || "0");
+    const hoTroDiLai = parseNumber(document.getElementById("pcDiLai")?.value || "0");
 
     const luongNgayCong = ngayCongChuan > 0 ? luongCoBan / ngayCongChuan : 0;
     const luongTangCa = ngayCongChuan > 0 ? (luongCoBan + phuCapThamNien + phuCapChucVu + hoTroDiLai) / ngayCongChuan / 8 : 0;
@@ -186,13 +205,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     tong += tienNgayLeTet;
 
+    // Tính tổng phụ cấp sử dụng parseNumber
     const phuCaps = [
       "pcABC", "pcChuyenCan", "pcThamNien",
       "pcChucVu", "pcDiLai", "pcDienThoai",
       "pcTreEm", "pcKhac"
     ];
     phuCaps.forEach(id => {
-      const val = +document.getElementById(id)?.value || 0;
+      const val = parseNumber(document.getElementById(id)?.value || "0");
       tong += val;
     });
 
