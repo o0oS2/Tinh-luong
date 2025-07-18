@@ -2,8 +2,8 @@ name: 🕒 Auto Update to Keep Repo Alive
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # Chạy hàng ngày lúc 09:00 sáng (giờ VN)
-  workflow_dispatch:     # Cho phép chạy thủ công
+    - cron: '0 2 * * *'  # 9h sáng VN mỗi ngày
+  workflow_dispatch:
 
 jobs:
   update:
@@ -13,13 +13,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: 📝 Update timestamp
-        run: |
-          echo "Cập nhật lúc: $(date '+%Y-%m-%d %H:%M:%S')" >> update-log.txt
+        run: echo "Cập nhật lúc: $(date '+%Y-%m-%d %H:%M:%S')" >> update-log.txt
 
       - name: 🧾 Commit file
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
           git add update-log.txt
-          git commit -m "🤖 Update timestamp at $(date '+%Y-%m-%d %H:%M:%S')" || echo "Không có thay đổi"
-          git push
+          git commit -m "🤖 Update timestamp at $(date '+%Y-%m-%d %H:%M:%S')" || exit 0
+          git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git HEAD:main
