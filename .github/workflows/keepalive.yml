@@ -1,17 +1,13 @@
-name: Keepalive Workflow
+name: Workflow Keepalive
 on:
   schedule:
-    - cron: "0 0 * * *" # Runs daily at midnight UTC
-  workflow_dispatch: # Allows manual triggering
-permissions:
-  actions: write
-  contents: write
+    - cron: "0 0 * * *"
+  workflow_dispatch:
 jobs:
   keepalive:
-    name: Keepalive Workflow
+    if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: gautamkrishnar/keepalive-workflow@v2
-        with:
-          time_elapsed: "0" # Check immediately
+      - uses: liskin/gh-workflow-keepalive@v1
