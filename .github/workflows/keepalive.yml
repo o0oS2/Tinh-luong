@@ -1,28 +1,17 @@
-name: 🕒 Auto Update to Keep Repo Alive
-
+name: Keepalive Workflow
 on:
   schedule:
-    - cron: '0 2 * * *'  # Mỗi ngày lúc 9h sáng giờ VN (UTC+7)
-  workflow_dispatch:
-
+    - cron: "0 0 * * *" # Runs daily at midnight UTC
+  workflow_dispatch: # Allows manual triggering
+permissions:
+  actions: write
+  contents: write
 jobs:
-  update:
+  keepalive:
+    name: Keepalive Workflow
     runs-on: ubuntu-latest
-
     steps:
-      - name: 🔄 Checkout repo
-        uses: actions/checkout@v3
-
-      - name: 📝 Update timestamp
-        run: |
-          echo "Cập nhật lúc: $(date '+%Y-%m-%d %H:%M:%S')" >> update-log.txt
-
-      - name: 🧾 Commit file
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-          git add update-log.txt
-          git commit -m "🤖 Update timestamp at $(date '+%Y-%m-%d %H:%M:%S')" || exit 0
-          git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }}.git HEAD:main
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v2
+        with:
+          time_elapsed: "0" # Check immediately
