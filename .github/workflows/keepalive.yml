@@ -1,0 +1,25 @@
+name: 🕒 Auto Update to Keep Repo Alive
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Chạy hàng ngày lúc 09:00 sáng (giờ VN)
+  workflow_dispatch:     # Cho phép chạy thủ công
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔄 Checkout repo
+        uses: actions/checkout@v3
+
+      - name: 📝 Update timestamp
+        run: |
+          echo "Cập nhật lúc: $(date '+%Y-%m-%d %H:%M:%S')" >> update-log.txt
+
+      - name: 🧾 Commit file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add update-log.txt
+          git commit -m "🤖 Update timestamp at $(date '+%Y-%m-%d %H:%M:%S')" || echo "Không có thay đổi"
+          git push
