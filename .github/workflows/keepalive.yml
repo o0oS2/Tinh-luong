@@ -2,18 +2,20 @@ name: 🕒 Auto Update to Keep Repo Alive
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # 9h sáng VN mỗi ngày
+    - cron: '0 2 * * *'  # Mỗi ngày lúc 9h sáng giờ VN (UTC+7)
   workflow_dispatch:
 
 jobs:
   update:
     runs-on: ubuntu-latest
+
     steps:
       - name: 🔄 Checkout repo
         uses: actions/checkout@v3
 
       - name: 📝 Update timestamp
-        run: echo "Cập nhật lúc: $(date '+%Y-%m-%d %H:%M:%S')" >> update-log.txt
+        run: |
+          echo "Cập nhật lúc: $(date '+%Y-%m-%d %H:%M:%S')" >> update-log.txt
 
       - name: 🧾 Commit file
         env:
