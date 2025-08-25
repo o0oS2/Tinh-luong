@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const luongDongBH = luongCoBan + phuCapThamNien + phuCapChucVu;
     const tienTruBHXH = Math.round(luongDongBH * 0.105);
-    const tienTruCD = Math.round(luongDongBH * 0.01);
+    const tienTruCD = Math.round(luongDongBH * 0.005);
     if(document.getElementById("tienTruBHXH")) {
       document.getElementById("tienTruBHXH").textContent = tienTruBHXH.toLocaleString("vi-VN");
     }
