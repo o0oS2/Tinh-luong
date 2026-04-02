@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const defaultValues = {
     pcDiLai: 500000,
     pcChuyenCan: 200000,
-    pcThamNien: 400000
+    pcThamNien: 600000
   };
 
   // Khởi tạo giá trị mặc định phụ cấp (với định dạng)
